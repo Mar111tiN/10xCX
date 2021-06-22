@@ -1,0 +1,12 @@
+testpon/
+data/
+output/
+__pycache__
+.DS_Store
+.snakemake
+slogs
+.ipynb_checkpoints/
+.vscode/
+snake/config/*
+!snake/config/config_devel.yaml
+!snake/config/cluster.json
