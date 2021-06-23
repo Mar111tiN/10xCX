@@ -18,7 +18,7 @@ ansii_colors = {
 colors = {
     "process": ansii_colors["green"],
     "time": ansii_colors["magenta"],
-    "normal": ansii_colors["gray"],
+    "normal": ansii_colors["blue"],
     "warning": ansii_colors["red"],
     "success": ansii_colors["cyan"],
 }
@@ -72,12 +72,12 @@ def cmd2df(cmd, show=False, **kwargs):
     return cmd_df
 
 
-def get_CNVconfig(config_file="", local_config={}):
+def get_config(config_file="", local_config={}):
     """
     load the global CNVconfig updated with local config
     """
 
     with open(config_file, "r") as stream:
-        added_config = load(stream, Loader=Loader)["CNV"]
+        added_config = load(stream, Loader=Loader)
         added_config.update(local_config)
     return added_config

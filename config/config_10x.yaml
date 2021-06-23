@@ -1,0 +1,6 @@
+---
+paths:
+  staticpath: Dropbox/Icke/Work/static
+  bampath: "Dropbox/Icke/Work/somVar/tooldata/10xCX/bam"    # relative to home or absolute
+10x:
+  MAPQmin: 20
