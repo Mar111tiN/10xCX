@@ -76,7 +76,7 @@ def get_intron_pos(df, intron=[0, 1]):
     0: outside
     1: spanning exon-intron border
     2: within intron
-    3: over int
+    3: over intron
     """
 
     cols = ["M1", "N", "M2"]
@@ -92,13 +92,22 @@ def get_intron_pos(df, intron=[0, 1]):
     i1 = intron[1]
     # get absolute intron pos as accumulated intron bool conditions of Start and End coords
     df.loc[:, "GenLen"] = df["M1"] + df["N"] + df["M2"]
+    df.loc[df["N"] > 0, "IntronCoords"] = (
+        df["Chr"]
+        + ":"
+        + (df["Start"] + df["M1"]).astype(str)
+        + "-"
+        + (df["Start"] + df["M1"] + df["N"]).astype(str)
+    )
     df.loc[:, "End"] = df["Start"] + df["GenLen"]
     df.loc[:, "IntronPosAbs"] = (
         (df["Start"] > i0).astype(int)
         + (df["Start"] > i1).astype(int)
         + (df["End"] > i0).astype(int)
         + (df["End"] > i1).astype(int) * 2
+        + (df["End"] > i1 + 100) * 99
     )
+    df.loc[df["IntronPosAbs"] > 99, "IntronPos"] = 0
     df.loc[df["IntronPosAbs"] > 3, "IntronPos"] = 5 - df["IntronPosAbs"]
     df.loc[df["IntronPosAbs"] < 4, "IntronPos"] = df["IntronPosAbs"]
     df.loc[:, "IntronPos"] = df["IntronPos"].astype(int)
@@ -107,6 +116,7 @@ def get_intron_pos(df, intron=[0, 1]):
         "UB",
         "IntronPos",
         "IntronPosAbs",
+        "IntronCoords",
         "Chr",
         "Start",
         "End",
@@ -157,4 +167,4 @@ def detect_CXCR3Alt(bam_file, region="", bed_file="", intron=[], config={}):
         f"Detected a total of {len(t_df['UB'].unique())} molecules with intron involvement in {len(t_df['CB'].unique())} cells",
         color="success",
     )
-    return t_df
+    return t_df, intron_df
